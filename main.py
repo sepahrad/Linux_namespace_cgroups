@@ -8,7 +8,10 @@ CLONE_NEWPID = 0x20000000
 CLONE_NEWCGROUP	= 0x02000000
 CLONE_NEWNET = 0x40000000
 
-ROOT_FS ="/mnt/d/MyData/Projects/Linux_namespace_cgroups/myroot/"
+ROOT_FS ="/mnt/d/MyData/Projects/Linux_namespace_cgroups/myroot"
+BASE_DIR = f"{ROOT_FS}/base"
+WORK_DIR = f"{ROOT_FS}/work"
+UPPER_DIR = f"{ROOT_FS}/upper"
 
 def unsharens(flags):
     res = libc.unshare(flags)
@@ -68,6 +71,7 @@ def create_mem_group():
         print(f"Warning: Cannot set memory limit: {e}")
 
 def child_func(stack):
+        #os.system(f"mount -t overlay -o lowerdir={BASE_DIR},upperdir={UPPER_DIR},workdir={WORK_DIR} overlay {ROOT_FS}")
         create_mem_group()
         set_hostname("mycontainer-ss")
         os.system(f"mount -t proc proc {ROOT_FS}/proc")
